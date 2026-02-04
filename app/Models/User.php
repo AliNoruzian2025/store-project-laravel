@@ -20,6 +20,7 @@ class User extends Authenticatable
         'last_name',   
         'password',
         'role',
+        'is_active',
         'address',     
         'postal_code'  
     ];
@@ -87,6 +88,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
+        'is_active' => 'boolean',
         'password' => 'hashed',
     ];
 
