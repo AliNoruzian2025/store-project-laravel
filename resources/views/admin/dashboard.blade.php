@@ -604,12 +604,12 @@
                 <p>ایجاد محصول جدید با مشخصات کامل و تصاویر</p>
             </a>
 
-            <a href="#" class="action-card">
+            <a href="{{ route('admin.products.index') }}" class="action-card">
                 <h3><i class="fas fa-edit"></i> مدیریت محصولات</h3>
                 <p>ویرایش، حذف و مدیریت موجودی محصولات</p>
             </a>
 
-            <a href="#" class="action-card">
+            <a href="{{ route('admin.categories.index') }}" class="action-card">
                 <h3><i class="fas fa-tags"></i> مدیریت دسته‌بندی‌ها</h3>
                 <p>ایجاد و ویرایش دسته‌بندی‌های محصولات</p>
             </a>
