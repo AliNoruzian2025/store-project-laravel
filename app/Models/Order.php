@@ -16,6 +16,8 @@ class Order extends Model
         'address',
         'postal_code',
         'notes',
+        'payment_method',
+        'payment_status',
     ];
 
     protected $casts = [
@@ -63,7 +65,7 @@ class Order extends Model
     public function getStatusTextAttribute()
     {
         $statuses = [
-            'pending' => 'در انتظار',
+            'pending' => 'در انتظار پرداخت',
             'processing' => 'در حال پردازش',
             'completed' => 'تکمیل شده',
             'cancelled' => 'لغو شده',
@@ -82,5 +84,15 @@ class Order extends Model
         ];
 
         return $colors[$this->status] ?? 'secondary';
+    }
+    
+    public function getPaymentMethodTextAttribute()
+    {
+        $methods = [
+            'wallet' => 'کیف پول',
+            'online' => 'آنلاین',
+        ];
+        
+        return $methods[$this->payment_method] ?? $this->payment_method;
     }
 }

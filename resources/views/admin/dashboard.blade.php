@@ -154,42 +154,7 @@
             background: rgba(192, 57, 43, 0.9);
         }
         
-        .notification-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            position: relative;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s;
-        }
-        
-        .notification-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        .notification-badge {
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #ff4757;
-            color: white;
-            font-size: 0.7rem;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* بقیه استایل‌های داشبورد شما */
+        /* محتوای اصلی */
         .admin-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -201,7 +166,7 @@
             color: white;
             padding: 40px;
             border-radius: var(--radius);
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             position: relative;
             overflow: hidden;
         }
@@ -219,72 +184,93 @@
         }
 
         .admin-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .admin-badge {
-            background: #e74c3c;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 1rem;
-            font-weight: 500;
+        /* آمار - در یک خط */
+        .stats-row {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            scrollbar-width: thin;
         }
 
-        .admin-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+        .stats-row::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .stats-row::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
         }
 
         .stat-card {
             background: white;
-            padding: 25px;
+            padding: 20px;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             transition: all 0.3s;
+            cursor: pointer;
+            min-width: 220px;
+            flex-shrink: 0;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: white;
         }
 
+        .stat-info {
+            flex: 1;
+        }
+
         .stat-info h3 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: var(--dark);
             margin-bottom: 5px;
+            line-height: 1.2;
+        }
+
+        .stat-info .amount {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 5px;
         }
 
         .stat-info p {
             color: var(--gray);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            margin-bottom: 3px;
         }
 
         .icon-users { background: #3498db; }
         .icon-products { background: #2ecc71; }
-        .icon-orders { background: #f39c12; }
         .icon-categories { background: #9b59b6; }
+        .icon-orders { background: #f39c12; }
+        .icon-money { background: #2ecc71; }
+        .icon-sales { background: #e74c3c; }
 
         .admin-actions {
             display: grid;
@@ -302,6 +288,7 @@
             text-decoration: none;
             color: var(--dark);
             border: 2px solid transparent;
+            display: block;
         }
 
         .action-card:hover {
@@ -328,15 +315,16 @@
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             overflow: hidden;
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .table-header {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 18px 20px;
             border-bottom: 1px solid var(--border);
             font-weight: bold;
             color: var(--dark);
+            font-size: 1.1rem;
         }
 
         .table-row {
@@ -372,6 +360,7 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            font-size: 0.9rem;
         }
 
         .btn-admin:hover {
@@ -394,6 +383,17 @@
             background: #27ae60;
         }
 
+        @media (max-width: 1200px) {
+            .stats-row {
+                flex-wrap: wrap;
+                overflow-x: visible;
+            }
+            
+            .stat-card {
+                min-width: calc(33.333% - 14px);
+            }
+        }
+
         @media (max-width: 768px) {
             .header-main {
                 flex-direction: column;
@@ -401,13 +401,12 @@
                 align-items: flex-start;
             }
             
-            .header-actions {
-                width: 100%;
-                justify-content: flex-start;
+            .stats-row {
+                flex-direction: column;
             }
             
-            .admin-stats {
-                grid-template-columns: 1fr;
+            .stat-card {
+                min-width: 100%;
             }
             
             .admin-actions {
@@ -451,22 +450,6 @@
         }
         
         .app-bar-item:hover {
-            opacity: 1;
-        }
-        
-        .app-bar-right {
-            display: flex;
-            gap: 15px;
-        }
-        
-        .app-bar-link {
-            color: white;
-            text-decoration: none;
-            opacity: 0.8;
-            transition: opacity 0.3s;
-        }
-        
-        .app-bar-link:hover {
             opacity: 1;
         }
     </style>
@@ -516,11 +499,6 @@
             </div>
             
             <div class="header-actions">
-                <button class="notification-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">0</span>
-                </button>
-                
                 <a href="{{ url('/') }}" class="header-btn btn-store">
                     <i class="fas fa-store"></i>
                     مشاهده فروشگاه
@@ -537,24 +515,20 @@
         </div>
     </header>
 
+    <!-- محتوای اصلی -->
     <div class="admin-container">
         <div class="admin-header">
             <h1 class="admin-title">
-                <i class="fas fa-crown"></i>
-                پنل مدیریت
-                <span class="admin-badge">ادمین</span>
+                <i class="fas fa-tachometer-alt"></i>
+                داشبورد مدیریت
             </h1>
-            <p>مدیریت کامل فروشگاه - آخرین آمار و گزارشات</p>
-            <p style="margin-top: 10px; opacity: 0.9;">
-                <i class="fas fa-user"></i>
-                {{ auth()->user()->first_name }} {{ auth()->user()->last_name }}
-                | {{ auth()->user()->mobile }}
-            </p>
+            <p>آمار و گزارشات لحظه‌ای فروشگاه - {{ now()->format('Y/m/d H:i') }}</p>
         </div>
 
-        <!-- آمار -->
-        <div class="admin-stats">
-            <div class="stat-card">
+        <!-- آمار کلی - در یک خط -->
+        <div class="stats-row">
+            <!-- کاربران -->
+            <div class="stat-card" onclick="window.location.href='{{ route('admin.users.index') }}'">
                 <div class="stat-icon icon-users">
                     <i class="fas fa-users"></i>
                 </div>
@@ -564,7 +538,8 @@
                 </div>
             </div>
 
-            <div class="stat-card">
+            <!-- محصولات -->
+            <div class="stat-card" onclick="window.location.href='{{ route('admin.products.index') }}'">
                 <div class="stat-icon icon-products">
                     <i class="fas fa-box"></i>
                 </div>
@@ -574,7 +549,8 @@
                 </div>
             </div>
 
-            <div class="stat-card">
+            <!-- دسته‌بندی‌ها -->
+            <div class="stat-card" onclick="window.location.href='{{ route('admin.categories.index') }}'">
                 <div class="stat-icon icon-categories">
                     <i class="fas fa-list"></i>
                 </div>
@@ -584,13 +560,58 @@
                 </div>
             </div>
 
+            <!-- سفارشات امروز -->
+            @php
+                use Carbon\Carbon;
+                $todayOrders = \App\Models\Order::whereDate('created_at', Carbon::today())->count();
+                $todayOrdersAmount = \App\Models\Order::whereDate('created_at', Carbon::today())->sum('total_amount') ?? 0;
+            @endphp
             <div class="stat-card">
                 <div class="stat-icon icon-orders">
                     <i class="fas fa-shopping-cart"></i>
                 </div>
                 <div class="stat-info">
-                    <h3>0</h3>
+                    <h3>{{ $todayOrders }}</h3>
                     <p>سفارشات امروز</p>
+                    @if($todayOrdersAmount > 0)
+                        <div class="amount" style="color: var(--success);">
+                            {{ number_format($todayOrdersAmount) }} <small>تومان</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- کل سفارشات -->
+            @php
+                $totalOrders = \App\Models\Order::count();
+                $totalOrdersAmount = \App\Models\Order::sum('total_amount') ?? 0;
+            @endphp
+            <div class="stat-card">
+                <div class="stat-icon icon-sales">
+                    <i class="fas fa-shopping-bag"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ $totalOrders }}</h3>
+                    <p>کل سفارشات</p>
+                    @if($totalOrdersAmount > 0)
+                        <div class="amount" style="color: var(--danger);">
+                            {{ number_format($totalOrdersAmount) }} <small>تومان</small>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- فروش امروز -->
+            <div class="stat-card">
+                <div class="stat-icon icon-money">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>{{ number_format($todayOrdersAmount) }}</h3>
+                    <p>فروش امروز</p>
+                    <div style="color: var(--gray); font-size: 0.8rem;">
+                        تومان
+                    </div>
                 </div>
             </div>
         </div>
@@ -612,18 +633,96 @@
                 <p>ایجاد و ویرایش دسته‌بندی‌های محصولات</p>
             </a>
 
-            <a href="{{ route('admin.users.index') }}   " class="action-card">
+            <a href="{{ route('admin.users.index') }}" class="action-card">
                 <h3><i class="fas fa-users-cog"></i> مدیریت کاربران</h3>
                 <p>مشاهده لیست کاربران و مدیریت دسترسی‌ها</p>
             </a>
         </div>
 
-        <!-- محصولات اخیر -->
+        <!-- سفارشات امروز -->
         <div class="recent-table">
+            <div class="table-header">
+                <i class="fas fa-clock"></i>
+                سفارشات امروز
+                <span style="font-size: 0.9rem; color: var(--gray); margin-right: 10px;">
+                    ({{ now()->format('Y/m/d') }})
+                </span>
+            </div>
+            
+            @php
+                $todayOrdersList = \App\Models\Order::with('user')
+                    ->whereDate('created_at', Carbon::today())
+                    ->latest()
+                    ->limit(5)
+                    ->get();
+            @endphp
+            
+            @if($todayOrdersList->count() > 0)
+                @foreach($todayOrdersList as $order)
+                <div class="table-row">
+                    <div class="col-1">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div>
+                                <strong>سفارش #{{ $order->id }}</strong><br>
+                                <small style="color: var(--gray);">
+                                    {{ $order->user->full_name ?? 'کاربر ناشناس' }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        @if($order->status == 'completed')
+                            <span style="color: #2ecc71; font-weight: 500;">
+                                <i class="fas fa-check-circle"></i> تکمیل شده
+                            </span>
+                        @elseif($order->status == 'processing')
+                            <span style="color: #f39c12; font-weight: 500;">
+                                <i class="fas fa-cog"></i> در حال پردازش
+                            </span>
+                        @elseif($order->status == 'pending')
+                            <span style="color: #3498db; font-weight: 500;">
+                                <i class="fas fa-clock"></i> در انتظار
+                            </span>
+                        @else
+                            <span style="color: #e74c3c;">
+                                <i class="fas fa-times-circle"></i> لغو شده
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-3">
+                        @if($order->payment_method == 'wallet')
+                            <span style="color: #9b59b6;">
+                                <i class="fas fa-wallet"></i> کیف پول
+                            </span>
+                        @else
+                            <span style="color: #3498db;">
+                                <i class="fas fa-credit-card"></i> آنلاین
+                            </span>
+                        @endif
+                    </div>
+                    <div class="col-4">
+                        <strong style="color: var(--danger); font-size: 1rem;">
+                            {{ number_format($order->total_amount) }} تومان
+                        </strong>
+                    </div>
+                </div>
+                @endforeach
+            @else
+                <div class="table-row" style="justify-content: center; padding: 30px;">
+                    <div style="text-align: center; color: var(--gray);">
+                        <i class="fas fa-shopping-cart" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                        <p>هیچ سفارشی برای امروز ثبت نشده است</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+
+        <!-- محصولات اخیر -->
+        <div class="recent-table" style="margin-top: 25px;">
             <div class="table-header">آخرین محصولات اضافه شده</div>
             
             @php
-                $recentProducts = \App\Models\Product::latest()->limit(5)->get();
+                $recentProducts = \App\Models\Product::with('category')->latest()->limit(5)->get();
             @endphp
             
             @foreach($recentProducts as $product)
@@ -638,7 +737,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-2">{{ number_format($product->price) }} تومان</div>
+                <div class="col-2" style="color: var(--dark); font-weight: 500;">
+                    {{ number_format($product->price) }} تومان
+                </div>
                 <div class="col-3">
                     @if($product->is_active)
                         <span style="color: #2ecc71; font-weight: 500;">
@@ -651,7 +752,7 @@
                     @endif
                 </div>
                 <div class="col-4">
-                    <a href="#" class="btn-admin" style="padding: 6px 12px; font-size: 0.9rem;">
+                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn-admin" style="padding: 6px 12px; font-size: 0.9rem;">
                         <i class="fas fa-edit"></i> ویرایش
                     </a>
                 </div>
@@ -665,9 +766,16 @@
                 <i class="fas fa-store"></i> مشاهده فروشگاه
             </a>
             
-            <a href="#" class="btn-admin btn-success">
-                <i class="fas fa-chart-line"></i> گزارشات آماری
-            </a>
+            @php
+                $pendingOrders = \App\Models\Order::where('status', 'pending')->count();
+            @endphp
+            
+            @if($pendingOrders > 0)
+                <a href="#" class="btn-admin" style="background: #f39c12;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    {{ $pendingOrders }} سفارش در انتظار
+                </a>
+            @endif
             
             <form method="POST" action="{{ route('logout') }}" style="display: inline;">
                 @csrf
@@ -677,39 +785,5 @@
             </form>
         </div>
     </div>
-
-    <!-- اسکریپت برای اعلان‌ها -->
-    <script>
-        // نمایش و مدیریت اعلان‌ها
-        document.addEventListener('DOMContentLoaded', function() {
-            const notificationBtn = document.querySelector('.notification-btn');
-            const notificationBadge = document.querySelector('.notification-badge');
-            
-            notificationBtn.addEventListener('click', function() {
-                alert('شما ۳ اعلان خوانده نشده دارید!');
-                // در حالت واقعی اینجا باید مودال اعلان‌ها نمایش داده شود
-            });
-            
-            // شبیه‌سازی اعلان جدید
-            setTimeout(() => {
-                const currentCount = parseInt(notificationBadge.textContent);
-                notificationBadge.textContent = currentCount + 1;
-                notificationBadge.style.animation = 'pulse 0.5s';
-                
-                setTimeout(() => {
-                    notificationBadge.style.animation = '';
-                }, 500);
-            }, 5000);
-        });
-    </script>
-    
-    <!-- استایل‌های انیمیشن برای اعلان‌ها -->
-    <style>
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-    </style>
 </body>
 </html>

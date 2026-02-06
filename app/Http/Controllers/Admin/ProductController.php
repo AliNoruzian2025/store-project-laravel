@@ -44,13 +44,12 @@ class ProductController extends Controller
         
         // آمار
         $stats = [
-            'total' => Product::count(),
-            'active' => Product::where('is_active', true)->count(),
-            'inactive' => Product::where('is_active', false)->count(),
-            'featured' => Product::where('is_featured', true)->count(),
-            'out_of_stock' => Product::where('stock', '<=', 0)->count(),
-            'with_discount' => Product::whereNotNull('discount_price')->count(),
-        ];
+        'total' => Product::count(),
+        'active' => Product::where('is_active', true)->count(),
+        'inactive' => Product::where('is_active', false)->count(),
+        'out_of_stock' => Product::where('stock', '<=', 0)->count(),
+        'with_discount' => Product::whereNotNull('discount_price')->count(),
+    ];
         
         $categories = Category::where('is_active', true)->get();
         

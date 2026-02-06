@@ -479,8 +479,8 @@
             </div>
             
             <div class="stat-card">
-                <div class="stat-number">{{ $stats['featured'] ?? 0 }}</div>
-                <div class="stat-label">ویژه</div>
+                <div class="stat-number">{{ $stats['inactive'] ?? 0 }}</div>
+                <div class="stat-label">غیرفعال</div>
             </div>
             
             <div class="stat-card">
@@ -525,7 +525,6 @@
                                 <option value="">همه</option>
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>فعال</option>
                                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>غیرفعال</option>
-                                <option value="featured" {{ request('status') == 'featured' ? 'selected' : '' }}>ویژه</option>
                                 <option value="out_of_stock" {{ request('status') == 'out_of_stock' ? 'selected' : '' }}>تمام شده</option>
                             </select>
                         </div>
@@ -610,14 +609,9 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div style="display: flex; flex-direction: column; gap: 3px;">
-                                        <span class="badge {{ $product->is_active ? 'badge-success' : 'badge-danger' }}">
-                                            {{ $product->is_active ? 'فعال' : 'غیرفعال' }}
-                                        </span>
-                                        @if($product->is_featured)
-                                            <span class="badge badge-warning">ویژه</span>
-                                        @endif
-                                    </div>
+                                    <span class="badge {{ $product->is_active ? 'badge-success' : 'badge-danger' }}">
+                                        {{ $product->is_active ? 'فعال' : 'غیرفعال' }}
+                                    </span>
                                 </td>
                                 <td>
                                     <div class="actions">
@@ -630,14 +624,6 @@
                                             <button type="submit" class="btn {{ $product->is_active ? 'btn-warning' : 'btn-success' }} btn-sm" 
                                                     title="{{ $product->is_active ? 'غیرفعال' : 'فعال' }}">
                                                 <i class="fas {{ $product->is_active ? 'fa-ban' : 'fa-check' }}"></i>
-                                            </button>
-                                        </form>
-                                        
-                                        <form method="POST" action="{{ route('admin.products.toggleFeatured', $product) }}" style="display: inline;">
-                                            @csrf
-                                            <button type="submit" class="btn {{ $product->is_featured ? 'btn-secondary' : 'btn-info' }} btn-sm"
-                                                    title="{{ $product->is_featured ? 'عادی' : 'ویژه' }}">
-                                                <i class="fas {{ $product->is_featured ? 'fa-star' : 'fa-star' }}"></i>
                                             </button>
                                         </form>
                                         

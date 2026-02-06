@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Cart;
 
 class HomeController extends Controller
 {
@@ -26,8 +27,7 @@ class HomeController extends Controller
         if ($searchQuery && strlen($searchQuery) > 0) {
             $productsQuery = $productsQuery->where(function($query) use ($searchQuery) {
                 $query->where('name', 'like', "%{$searchQuery}%")
-                      ->orWhere('description', 'like', "%{$searchQuery}%")
-                      ->orWhere('slug', 'like', "%{$searchQuery}%");
+                    ->orWhere('description', 'like', "%{$searchQuery}%");
             });
         }
         
@@ -41,18 +41,51 @@ class HomeController extends Controller
             }])
             ->orderBy('name')
             ->get();
-            
-        // برگرداندن view با داده‌ها
+        
+        // اطلاعات سبد خرید کاربر
+        $cartCount = 0;
+        if (auth()->check()) {
+            $cartCount = auth()->user()->cartItems()->count();
+        }
+        
         return view('home', compact(
             'products', 
             'categories', 
             'categoryId', 
-            'searchQuery'
+            'searchQuery',
+            'cartCount'
         ));
+    }
+
+    
+    /**
+     * نمایش صفحه تک محصول
+     */
+    public function showProduct($id)
+    {
+        $product = Product::where('is_active', true)
+            ->with('category')
+            ->findOrFail($id);
+            
+        // محصولات مرتبط
+        $relatedProducts = Product::where('is_active', true)
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+        
+        // اطلاعات سبد خرید کاربر
+        $cartCount = 0;
+        if (auth()->check()) {
+            $cartCount = auth()->user()->cartItems()->count();
+        }
+        
+        return view('products.show', compact('product', 'relatedProducts', 'cartCount'));
     }
     
     /**
-     * جستجوی پیشرفته (برای آینده)
+     * جستجوی پیشرفته
      */
     public function search(Request $request)
     {
