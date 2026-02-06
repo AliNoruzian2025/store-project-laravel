@@ -13,7 +13,6 @@ class User extends Authenticatable
     const ROLE_ADMIN = 'admin';
     const ROLE_USER = 'user';
 
-    // فقط فیلدهای موجود در جدول
     protected $fillable = [
         'mobile',
         'first_name',  
@@ -25,9 +24,6 @@ class User extends Authenticatable
         'postal_code'  
     ];
 
-    /**
-     * ولیدیشن برای مرحله اول (شماره موبایل)
-     */
     public static function validateMobile(array $data)
     {
         return validator($data, [
@@ -35,9 +31,6 @@ class User extends Authenticatable
         ]);
     }
 
-    /**
-     * ولیدیشن برای مرحله دوم (اطلاعات کاربر)
-     */
     public static function validateProfile(array $data)
     {
         return validator($data, [
@@ -47,9 +40,6 @@ class User extends Authenticatable
         ]);
     }
 
-    /**
-     * ولیدیشن برای مرحله تکمیلی (آدرس)
-     */
     public static function validateAddress(array $data)
     {
         return validator($data, [
@@ -58,25 +48,16 @@ class User extends Authenticatable
         ]);
     }
 
-    /**
-     * Check if user is admin
-     */
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
     }
 
-    /**
-     * Get full name (نام کامل)
-     */
     public function getFullNameAttribute(): string
     {
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    /**
-     * Get name (برای سازگاری با سیستم‌هایی که name می‌خواهند)
-     */
     public function getNameAttribute(): string
     {
         return $this->full_name;
@@ -92,6 +73,50 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // اگر می‌خواهید این accessorها در JSON نمایش داده شوند
     protected $appends = ['full_name', 'name'];
+
+    // ==================== روابط کیف پول ====================
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class);
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    // ==================== متدهای کیف پول ====================
+    public function getWalletBalance()
+    {
+        if (!$this->wallet) {
+            $this->wallet()->create(['balance' => 0]);
+        }
+        return $this->wallet->balance;
+    }
+
+    public function getFormattedWalletBalance()
+    {
+        return number_format($this->getWalletBalance()) . ' تومان';
+    }
+
+    public function hasSufficientBalance($amount)
+    {
+        return $this->getWalletBalance() >= $amount;
+    }
+
+    // ==================== Event ====================
+    protected static function booted()
+    {
+        static::created(function ($user) {
+            if (!$user->wallet) {
+                $user->wallet()->create(['balance' => 0]);
+            }
+        });
+    }
 }

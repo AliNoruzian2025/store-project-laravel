@@ -518,7 +518,7 @@
             <div class="header-actions">
                 <button class="notification-btn">
                     <i class="fas fa-bell"></i>
-                    <span class="notification-badge">۳</span>
+                    <span class="notification-badge">0</span>
                 </button>
                 
                 <a href="{{ url('/') }}" class="header-btn btn-store">
@@ -537,9 +537,7 @@
         </div>
     </header>
 
-    <!-- محتوای داشبورد (همان کد قبلی شما) -->
     <div class="admin-container">
-        <!-- هدر ادمین -->
         <div class="admin-header">
             <h1 class="admin-title">
                 <i class="fas fa-crown"></i>
@@ -599,7 +597,7 @@
 
         <!-- اقدامات سریع -->
         <div class="admin-actions">
-            <a href="#" class="action-card">
+            <a href="{{ route('admin.products.create') }}" class="action-card">
                 <h3><i class="fas fa-plus-circle"></i> افزودن محصول جدید</h3>
                 <p>ایجاد محصول جدید با مشخصات کامل و تصاویر</p>
             </a>

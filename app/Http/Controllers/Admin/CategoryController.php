@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -16,35 +15,51 @@ class CategoryController extends Controller
     {
         $search = $request->input('search');
         $status = $request->input('status');
+        $sort = $request->input('sort', 'latest');
         
-        $query = Category::query();
+        $query = Category::withCount('products');
         
-        // فیلتر جستجو
         if ($search) {
             $query->where('name', 'like', "%{$search}%");
         }
         
-        // فیلتر وضعیت
         if ($status === 'active') {
             $query->where('is_active', true);
         } elseif ($status === 'inactive') {
             $query->where('is_active', false);
         }
         
-        $categories = $query->latest()->paginate(20);
+        // مرتب‌سازی
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            default: // latest
+                $query->latest();
+                break;
+        }
+        
+        $categories = $query->paginate(20);
         
         // آمار
         $stats = [
             'total' => Category::count(),
             'active' => Category::where('is_active', true)->count(),
             'inactive' => Category::where('is_active', false)->count(),
+            'with_products' => Category::has('products')->count(),
         ];
         
         return view('admin.categories.index', compact('categories', 'stats'));
     }
 
     /**
-     * نمایش فرم ایجاد دسته جدید
+     * نمایش فرم ایجاد دسته‌بندی جدید
      */
     public function create()
     {
@@ -52,29 +67,19 @@ class CategoryController extends Controller
     }
 
     /**
-     * ذخیره دسته جدید
+     * ذخیره دسته‌بندی جدید
      */
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name',
+            'description' => 'nullable|string|max:500',
             'is_active' => 'boolean',
         ]);
         
-        // ایجاد slug خودکار از نام
-        $slug = Str::slug($request->name, '-', 'fa');
-        
-        // اگر slug تکراری بود، شماره اضافه کن
-        $counter = 1;
-        $originalSlug = $slug;
-        while (Category::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
-        }
-        
         Category::create([
             'name' => $request->name,
-            'slug' => $slug,
+            'description' => $request->description,
             'is_active' => $request->boolean('is_active', true),
         ]);
         
@@ -83,7 +88,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * نمایش فرم ویرایش دسته
+     * نمایش فرم ویرایش دسته‌بندی
      */
     public function edit(Category $category)
     {
@@ -91,17 +96,19 @@ class CategoryController extends Controller
     }
 
     /**
-     * بروزرسانی دسته
+     * بروزرسانی دسته‌بندی
      */
     public function update(Request $request, Category $category)
     {
         $request->validate([
             'name' => 'required|string|max:100|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:500',
             'is_active' => 'boolean',
         ]);
         
         $category->update([
             'name' => $request->name,
+            'description' => $request->description,
             'is_active' => $request->boolean('is_active'),
         ]);
         
@@ -110,17 +117,17 @@ class CategoryController extends Controller
     }
 
     /**
-     * حذف دسته
+     * حذف دسته‌بندی
      */
     public function destroy(Category $category)
     {
-        // بررسی وجود محصول در این دسته
+        // بررسی آیا دسته‌بندی محصول دارد
         if ($category->products()->exists()) {
-            return back()->with('error', 'این دسته دارای محصول می‌باشد. ابتدا محصولات را حذف یا منتقل کنید.');
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'امکان حذف دسته‌بندی وجود ندارد زیرا دارای محصول است.');
         }
         
         $category->delete();
-        
         return redirect()->route('admin.categories.index')
             ->with('success', 'دسته‌بندی با موفقیت حذف شد.');
     }

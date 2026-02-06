@@ -9,6 +9,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\UserWalletController;
 
 // ==================== سیستم احراز هویت ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -80,9 +82,27 @@ Route::middleware([RoleMiddleware::class . ':admin'])->prefix('admin')->name('ad
     
 });
 
-// ==================== پنل کاربر عادی ====================
-Route::middleware([RoleMiddleware::class . ':user'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('user.dashboard');
+
+// ==================== پنل کاربر ====================
+Route::middleware([RoleMiddleware::class . ':user'])->prefix('user')->name('user.')->group(function () {
+    
+    // داشبورد کاربر
+    Route::get('/dashboard', [UserDashboardController::class, 'dashboard'])->name('dashboard');
+    
+    // پروفایل کاربر
+    Route::get('/profile', [UserDashboardController::class, 'profile'])->name('profile');
+    Route::put('/profile', [UserDashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [UserDashboardController::class, 'updatePassword'])->name('profile.password');
+    
+    // سفارشات کاربر
+    Route::get('/orders', [UserDashboardController::class, 'orders'])->name('orders.index');
+    Route::get('/orders/{order}', [UserDashboardController::class, 'orderShow'])->name('orders.show');
+    Route::post('/orders/cancel/{order}', [UserDashboardController::class, 'cancelOrder'])->name('orders.cancel');
+    
+    // کیف پول
+    Route::get('/wallet', [UserWalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/charge', [UserWalletController::class, 'charge'])->name('wallet.charge');
+    Route::get('/wallet/payment/{transaction}', [UserWalletController::class, 'showPayment'])->name('wallet.payment');
+    Route::post('/wallet/pay', [UserWalletController::class, 'processPayment'])->name('wallet.pay');
+    Route::get('/wallet/transactions', [UserWalletController::class, 'transactions'])->name('wallet.transactions');
 });

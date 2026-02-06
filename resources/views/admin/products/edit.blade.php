@@ -276,11 +276,11 @@
                 </div>
                 <div>
                     <span class="info-label">تاریخ ایجاد:</span>
-                    <span class="info-value">{{ verta($product->created_at)->format('Y/m/d H:i') }}</span>
+                    <span class="info-value">{{ $product->created_at->format('Y/m/d H:i') }}</span>
                 </div>
                 <div>
                     <span class="info-label">آخرین ویرایش:</span>
-                    <span class="info-value">{{ verta($product->updated_at)->format('Y/m/d H:i') }}</span>
+                    <span class="info-value">{{ $product->updated_at->format('Y/m/d H:i') }}</span>
                 </div>
             </div>
         </div>
